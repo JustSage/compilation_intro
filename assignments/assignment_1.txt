@@ -1,0 +1,127 @@
+ Sagie
+ Baram
+ 205591829
+ Assignment 1
+ 16/04/2021
+%%
+######## Question 1 ########
+
+[a-z] printf("char %c\n", yytext[0] + ('A' - 'a'));
+[A-Z] printf("char %c\n", yytext[0] - ('A' - 'a'));
+[A-Z]?[a-z]+ printf("word %s %d\n", yytext, yyleng);
+[+]?[0-9]*\.[0-9]+([eE][+-][0-9]+) printf("positive expo\n");
+[-]?[0-9]*\.[0-9]+([eE][+-][0-9]+) printf("negative expo\n");
+[+]?[1-9][0-9]* printf("positive integer\n");
+[-][1-9][0-9]* printf("negative integer\n");
+[+]?[0-9][1-9]*[.][0-9]+ printf("positive float\n");
+[-][0-9][1-9]*[.][0-9]+ printf("negative float\n")
+[a-zA-Z0-9]+ printf("string\n");
+
+######## Question 2 ########
+
+[abcd]*e|[abce]*d|[abde]*c|[acde]*b|[bcde]*a printf("Yes, %s\n",yytext);
+
+######## Question 3 ########
+
+b*a* {
+    int count_i = 0;
+    int count_j = 0;
+    int i,j;
+    for(i=0; i<yyleng; i++){
+        if (yytext[i]== 'b'){
+            count_i++;
+        }
+    }
+     for(j=0; j<yyleng; j++){
+       if(yytext[j]=='a'){
+            count_j++;
+        }
+    }
+    if (count_i % 3 == 0 && (count_j % 4 == count_i % 2)){
+        printf("Yes\n");
+    }
+}
+
+######## Question 4 ########
+
+1|(1(0|1)*1)|(0(0|1)*00) printf("Yes %s\n", yytext);
+
+######## Question 5 ########
+
+a*b+ {
+    int count_a = 0;
+    int count_b = 0;
+    for (int i=0;i<yyleng;i++){
+        if (yytext[i] == 'a'){
+            count_a++;
+        }
+    }
+    for (int j=yyleng-1;j>=0;j--){
+        if (yytext[j] == 'b'){
+            count_b++;
+        }
+    }
+
+    if (count_a + 1 <= count_b && count_a * 3 + 1 >= count_b) {
+        printf("Yes\n");
+    }
+}
+
+######## Question 6 ########
+
+a*b*c*d* {
+    int counters[] = {0,0,0,0};
+    char chars[] = {'a','b','c','d'};
+    int m = 0; // counters iterator
+    int k = 0; // chars iterator
+
+    for (int i = 0; i < sizeof(chars); i++){
+        // traversing the string.
+        for(int j = 0; j < yyleng; ++j){
+            if(yytext[j] == chars[k]){
+                counters[m]++;
+            }
+        }
+        // incrementing the char array/counter array according to the language.
+        ++k;
+        ++m;
+    }
+
+    // checking if a^i = b^(2i*0.5) and c^3j = d^(2j*1.5)
+    if ((counters[0] == counters[1]*0.5) && (counters[2] == counters[3]*1.5)){
+                printf("Yes\n");
+    }
+}
+
+######## Question 7 ########
+
+[0-9]+ {
+    int min = 65; // A
+    int max = 90; // Z
+    int num = atoi(yytext); // converts string to integer.
+    int temp = num;
+    int integers[yyleng];
+
+    // inserting the given number to an array in the right order.
+    for (int i=yyleng-1;i>=0;i--){
+        integers[i] = temp % 10;
+        temp /= 10;
+    }
+
+    // traversing the array of integers.
+    for (int i=0; i<yyleng-1;i++){
+        // taking pairs of digits from the array.
+        int asAscii = integers[i]*10+integers[i+1];
+        // if the number above is in uppercase letter ascii range...
+        if (min <= asAscii && asAscii <= max){
+            // print the numberic lowercase representation.
+            printf("%d -> %c -> %c -> %d\n", asAscii, asAscii, asAscii +32, asAscii + 32);
+            i++;
+        }
+    }
+}
+
+[ ] printf("");
+\n ;
+.  ;
+%%
